@@ -1,3 +1,5 @@
+const stream = require('stream');
+const fs = require('fs')
 class ThrottleTransform extends stream.Transform {
     constructor(options) {
         super(options);
@@ -51,3 +53,6 @@ class ThrottleTransform extends stream.Transform {
         this._transform_v2(chunk, encoding, callback)
     }
 }
+let throttle = new ThrottleTransform({rateLimit:32*1024})//1KB/s
+const readStream = fs.createReadStream('files/file');
+readStream.pipe(throttle).pipe(process.stdout)
